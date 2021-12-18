@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 
 class NewsApiViewModel(private val interactor: NewsInteractor) : ViewModel() {
 
+    val newsApi : LiveData<NewsResponse> get() = _newsApi
     private val _newsApi = MutableLiveData<NewsResponse>()
-    val newsApi: LiveData<NewsResponse> get() =_newsApi
 
     init {
         loadNewsApi()

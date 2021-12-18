@@ -66,22 +66,20 @@ interface NewsApi {
      **/
 
     @GET ("everything")
-
-    fun getEverything(
-        @Query("q") query: String?,
-        @Query("qInTitle") qInTitle: String?,
-        @Query("sources") sources: String?,
-        @Query("domains") domains: String?,
-        @Query("excludeDomains") excludeDomains: String?,
-        @Query("from") fromDate: String?,
-        @Query("to") toDate: String?,
-        @Query("sortBy") sortBy: String?,
-        @Query("category") category: String?,
-        @Query("language") language: String?,
-        @Query("country") country: String?,
-        @Query("pageSize") pageSize: Int? = 100,
-        @Query("page") page: Int? = 1,
-        @Query("apiKey") apiKey: String? = RetrofitClient.API_KEY,
-
+    suspend fun getEverything(
+        @Query("q") query: String = "",
+        @Query("qInTitle") qInTitle: String = "",
+        @Query("sources") sources: String = "",
+        @Query("domains") domains: String = "",
+        @Query("excludeDomains") excludeDomains: String ="",
+        @Query("from") fromDate: String = "",
+        @Query("to") toDate: String = "",
+        @Query("sortBy") sortBy: String = "",
+        @Query("category") category: String = "",
+        @Query("language") language: String = "",
+        @Query("country") country: String = "",
+        @Query("pageSize") pageSize: Int = 100,
+        @Query("page") page: Int = 1,
+        @Query("apiKey") apiKey: String = RetrofitClient.API_KEY,
     ): NewsResponse
 }

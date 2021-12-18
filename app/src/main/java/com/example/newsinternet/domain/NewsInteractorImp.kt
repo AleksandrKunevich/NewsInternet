@@ -6,19 +6,8 @@ import com.example.newsinternet.data.network.dto.NewsResponse
 class NewsInteractorImp(private val newsApi: NewsApi): NewsInteractor {
     override suspend fun getNews(): NewsResponse {
         return newsApi.getEverything(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            "business",
-            "ru",
-            "ru",
-            1,
-            10
+            query = "Sport",
+            language = "en"
         )
     }
 }
