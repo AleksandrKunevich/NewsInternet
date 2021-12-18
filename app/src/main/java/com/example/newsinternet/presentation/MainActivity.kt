@@ -1,7 +1,7 @@
-package com.example.newsinternet
+package com.example.newsinternet.presentation
 
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import com.example.newsinternet.R
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 }
