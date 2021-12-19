@@ -2,13 +2,15 @@ package com.example.newsinternet.presentation.recycler
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newsinternet.domain.OnNewsApiClickListener
 
-class NewsAdapter() : RecyclerView.Adapter<NewsHolder>() {
+class NewsAdapter(private val clickListener: OnNewsApiClickListener) :
+    RecyclerView.Adapter<NewsHolder>() {
 
     private var items: List<News> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsHolder {
-        return NewsHolder.from(parent)
+        return NewsHolder.from(parent, clickListener)
     }
 
     override fun onBindViewHolder(holder: NewsHolder, position: Int) {

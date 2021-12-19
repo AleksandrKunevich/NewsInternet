@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             Toast.makeText(this, news.articles.size.toString(), Toast.LENGTH_LONG).show()
 
             binding.textView.setOnClickListener {
-                openFragment(convertNewsResposeToNews(news))
+                openFragment(convertNewsResponseToNews(news))
             }
 
             CoroutineScope(Dispatchers.Main).launch {
@@ -47,10 +47,19 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             .commit()
     }
 
-    private fun convertNewsResposeToNews(newsResponse: NewsResponse): List<News> {
+    private fun convertNewsResponseToNews(newsResponse: NewsResponse): List<News> {
         val news: MutableList<News> = mutableListOf()
         newsResponse.articles.forEach {
-            news.add(News(it.urlImage, it.title!!, false))
+            news.add(
+                News(
+                    imageUrl = it.urlImage ?: News().imageUrl,
+                    urlResource = it.url ?: News().urlResource,
+                    title = it.title ?: News().title,
+                    date = it.date ?: News().date,
+                    content = it.content ?: News().content,
+                    author = it.author ?: News().author
+                )
+            )
         }
         return news.toList()
     }

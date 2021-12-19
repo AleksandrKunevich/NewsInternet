@@ -22,4 +22,6 @@ class NewsApiViewModel(private val interactor: NewsInteractor) : ViewModel() {
             _newsApi.value = interactor.getNews()
         }
     }
+
+
 }
