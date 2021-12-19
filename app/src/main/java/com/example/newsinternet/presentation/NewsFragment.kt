@@ -43,17 +43,10 @@ class NewsFragment(private val newsList: List<News>) : Fragment() {
         }
 
         override fun onTitleNewsContainerClickListener(news: News) {
-            parentFragmentManager
-                .beginTransaction()
-                .addToBackStack(OneNewsFragment.TAG)
-                .add(
-                    bindingActivity.container.id,
-                    OneNewsFragment.newInstance(news),
-                    OneNewsFragment.TAG
-                )
-                .remove(this@NewsFragment)
-                .commit()
+            openOneNewsFragment(news)
         }
+
+
 
         override fun onImageNewsContainerClickListener(imageUrl: String) {
             binding.recyclerNewsApi.visibility = View.INVISIBLE
@@ -82,6 +75,37 @@ class NewsFragment(private val newsList: List<News>) : Fragment() {
 
         initRecycler()
         initDao()
+
+        binding.btnSavedNews.setOnClickListener {
+            newsDao = db.getAll()
+            openSavedNewsFragment(newsDao)
+        }
+    }
+
+    private fun openOneNewsFragment(news: News) {
+        parentFragmentManager
+            .beginTransaction()
+            .addToBackStack(OneNewsFragment.TAG)
+            .add(
+                bindingActivity.container.id,
+                OneNewsFragment.newInstance(news),
+                OneNewsFragment.TAG
+            )
+            .remove(this@NewsFragment)
+            .commit()
+    }
+
+    private fun openSavedNewsFragment(newsDao: List<News>) {
+        parentFragmentManager
+            .beginTransaction()
+            .addToBackStack(SavedNewsFragment.TAG)
+            .add(
+                bindingActivity.container.id,
+                SavedNewsFragment.newInstance(newsDao),
+                SavedNewsFragment.TAG
+            )
+            .remove(this@NewsFragment)
+            .commit()
     }
 
     private fun initRecycler() {

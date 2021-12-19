@@ -1,18 +1,11 @@
 package com.example.newsinternet.presentation
 
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newsinternet.R
 import com.example.newsinternet.data.network.dto.NewsResponse
 import com.example.newsinternet.databinding.ActivityMainBinding
 import com.example.newsinternet.presentation.recycler.News
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.lang.Math.random
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
@@ -29,7 +22,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 //            Toast.makeText(this, news.articles.size.toString(), Toast.LENGTH_LONG).show()
 
 //            binding.textView.setOnClickListener {
-                openFragment(convertNewsResponseToNews(news))
+            openFragment(convertNewsResponseToNews(news))
 //            }
 
 //            CoroutineScope(Dispatchers.Main).launch {
@@ -52,15 +45,16 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private fun convertNewsResponseToNews(newsResponse: NewsResponse): List<News> {
         val news: MutableList<News> = mutableListOf()
         newsResponse.articles.forEach {
+            val randomId = (0..Int.MAX_VALUE).random()
             news.add(
                 News(
-                    id = it.source?.id?.toInt() ?: (0..Int.MAX_VALUE).random(),
-                    imageUrl = it.urlImage ?: News().imageUrl,
-                    urlResource = it.url ?: News().urlResource,
-                    title = it.title ?: News().title,
-                    date = it.date ?: News().date,
-                    content = it.content ?: News().content,
-                    author = it.author ?: News().author
+                    uid = randomId,
+                    imageUrl = it.urlImage ?: News(randomId).imageUrl,
+                    urlResource = it.url ?: News(randomId).urlResource,
+                    title = it.title ?: News(randomId).title,
+                    date = it.date ?: News(randomId).date,
+                    content = it.content ?: News(randomId).content,
+                    author = it.author ?: News(randomId).author
                 )
             )
         }

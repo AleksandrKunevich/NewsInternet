@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Entity
 @Parcelize
 data class News(
-    @PrimaryKey val id: Int,
+    @PrimaryKey val uid: Int,
     @ColumnInfo(name = "imageUrl") val imageUrl: String = "@drawable/ic_baseline_error_84",
     @ColumnInfo(name = "urlResource") val urlResource: String = "@drawable/ic_baseline_error_84",
     @ColumnInfo(name = "title") val title: String = "Error load title",

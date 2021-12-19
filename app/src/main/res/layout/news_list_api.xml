@@ -83,14 +83,14 @@
             android:background="@color/teal_700"
             android:src="@drawable/ic_baseline_filter_list_64"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnSaveNews"
+            app:layout_constraintEnd_toStartOf="@id/btnSavedNews"
             app:layout_constraintStart_toEndOf="@id/btnReset"
             app:layout_constraintTop_toTopOf="parent">
 
         </ImageButton>
 
         <ImageButton
-            android:id="@+id/btnSaveNews"
+            android:id="@+id/btnSavedNews"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_margin="8dp"

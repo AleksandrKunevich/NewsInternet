@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class NewsApiViewModel(private val interactor: NewsInteractor) : ViewModel() {
 
-    val newsApi : LiveData<NewsResponse> get() = _newsApi
+    val newsApi: LiveData<NewsResponse> get() = _newsApi
     private val _newsApi = MutableLiveData<NewsResponse>()
 
     init {
@@ -23,5 +23,9 @@ class NewsApiViewModel(private val interactor: NewsInteractor) : ViewModel() {
         }
     }
 
-
+//    fun onSaveClick(position: Int){
+//        val item = _newsApi.value?.articles?.get(position)
+//        val list = _newsApi.value?.articles?.toMutableList()
+//        list[position] = item.copy(source = )
+//    }
 }
