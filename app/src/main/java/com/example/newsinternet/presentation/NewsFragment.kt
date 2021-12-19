@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.example.newsinternet.databinding.ActivityMainBinding
 import com.example.newsinternet.databinding.NewsListApiBinding
 import com.example.newsinternet.domain.OnNewsApiClickListener
 import com.example.newsinternet.presentation.recycler.News
 import com.example.newsinternet.presentation.recycler.NewsAdapter
 
-class NewsFragment(private val news: List<News>) : Fragment() {
+class NewsFragment(private val newsList: List<News>) : Fragment() {
 
     companion object {
         const val TAG = "NewsFragment(news)"
@@ -20,15 +22,35 @@ class NewsFragment(private val news: List<News>) : Fragment() {
     }
 
     private lateinit var binding: NewsListApiBinding
+    private lateinit var bindingActivity: ActivityMainBinding
     private val adapterNews by lazy { NewsAdapter(newsApiClickListener) }
 
-    private val newsApiClickListener: OnNewsApiClickListener = object: OnNewsApiClickListener{
+    private val newsApiClickListener: OnNewsApiClickListener = object : OnNewsApiClickListener {
         override fun onImageCheckItemNewsClickListener(adapterPosition: Int) {
-            news[adapterPosition].isSaved = !news[adapterPosition].isSaved
+            newsList[adapterPosition].isSaved = !newsList[adapterPosition].isSaved
         }
 
-        override fun onItemNewsContainerClickListener() {
+        override fun onTitleNewsContainerClickListener(news: News) {
+            parentFragmentManager
+                .beginTransaction()
+                .addToBackStack(OneNewsFragment.TAG)
+                .add(
+                    bindingActivity.container.id,
+                    OneNewsFragment.newInstance(news),
+                    OneNewsFragment.TAG
+                )
+                .remove(this@NewsFragment)
+                .commit()
+        }
 
+        override fun onImageNewsContainerClickListener(imageUrl: String) {
+            binding.recyclerNewsApi.visibility = View.INVISIBLE
+            binding.imageNews.visibility = View.VISIBLE
+            Glide.with(requireContext()).load(imageUrl).into(binding.imageNews)
+            binding.imageNews.setOnClickListener {
+                binding.recyclerNewsApi.visibility = View.VISIBLE
+                binding.imageNews.visibility = View.INVISIBLE
+            }
         }
 
     }
@@ -39,6 +61,7 @@ class NewsFragment(private val news: List<News>) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = NewsListApiBinding.inflate(inflater, container, false)
+        bindingActivity = ActivityMainBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -48,7 +71,7 @@ class NewsFragment(private val news: List<News>) : Fragment() {
         binding.apply {
             recyclerNewsApi.adapter = adapterNews
             recyclerNewsApi.layoutManager = LinearLayoutManager(activity)
-            adapterNews.submitList(news)
+            adapterNews.submitList(newsList)
         }
     }
 }

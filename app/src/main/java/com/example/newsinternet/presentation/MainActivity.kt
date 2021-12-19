@@ -1,5 +1,6 @@
 package com.example.newsinternet.presentation
 
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newsinternet.R
@@ -24,18 +25,18 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         setContentView(binding.root)
 
         newsApiViewModel.newsApi.observe(this) { news ->
-            Toast.makeText(this, news.articles.size.toString(), Toast.LENGTH_LONG).show()
+//            Toast.makeText(this, news.articles.size.toString(), Toast.LENGTH_LONG).show()
 
-            binding.textView.setOnClickListener {
+//            binding.textView.setOnClickListener {
                 openFragment(convertNewsResponseToNews(news))
-            }
+//            }
 
-            CoroutineScope(Dispatchers.Main).launch {
-                news.articles.forEach { article ->
-                    binding.textView.text = article.title
-                    delay(1000L)
-                }
-            }
+//            CoroutineScope(Dispatchers.Main).launch {
+//                news.articles.forEach { article ->
+//                    binding.textView.text = article.title
+//                    delay(1000L)
+//                }
+//            }
         }
     }
 
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         supportFragmentManager
             .beginTransaction()
             .addToBackStack(NewsFragment.TAG)
-            .add(binding.container.id, NewsFragment.newInstance(news))
+            .add(binding.container.id, NewsFragment.newInstance(news), NewsFragment.TAG)
             .commit()
     }
 
