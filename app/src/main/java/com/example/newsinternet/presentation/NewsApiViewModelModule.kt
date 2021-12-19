@@ -5,6 +5,6 @@ import org.koin.dsl.module
 
 val newsApiViewModelModule = module {
     viewModel<NewsApiViewModel> {
-        NewsApiViewModel(get())
+        NewsApiViewModel(interactor = get())
     }
 }

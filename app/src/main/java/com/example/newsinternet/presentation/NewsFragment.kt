@@ -12,11 +12,13 @@ import com.example.newsinternet.data.storage.AppDataBase
 import com.example.newsinternet.data.storage.NewsDao
 import com.example.newsinternet.databinding.ActivityMainBinding
 import com.example.newsinternet.databinding.NewsListApiBinding
+import com.example.newsinternet.domain.NewsFilter
 import com.example.newsinternet.domain.OnNewsApiClickListener
 import com.example.newsinternet.presentation.recycler.News
 import com.example.newsinternet.presentation.recycler.NewsAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewsFragment(private val newsList: List<News>) : Fragment() {
+class NewsFragment(private var newsList: List<News>) : Fragment() {
 
     companion object {
         const val TAG = "NewsFragment(news)"
@@ -29,6 +31,7 @@ class NewsFragment(private val newsList: List<News>) : Fragment() {
     private val adapterNews by lazy { NewsAdapter(newsApiClickListener) }
     private var newsDao: List<News> = mutableListOf()
     private lateinit var db: NewsDao
+    private val newsApiViewModel: NewsApiViewModel by viewModel()
 
     private val newsApiClickListener: OnNewsApiClickListener = object : OnNewsApiClickListener {
         override fun onImageSaveItemNewsClickListener(adapterPosition: Int) {
@@ -39,6 +42,7 @@ class NewsFragment(private val newsList: List<News>) : Fragment() {
                 } else {
                     db.delete(this)
                 }
+                newsDao = db.getAll()
             }
         }
 
@@ -79,6 +83,22 @@ class NewsFragment(private val newsList: List<News>) : Fragment() {
         binding.btnSavedNews.setOnClickListener {
             newsDao = db.getAll()
             openSavedNewsFragment(newsDao)
+        }
+
+        binding.btnReset.setOnClickListener {
+            newsDao.forEach { news ->
+                db.delete(news)
+            }
+            newsDao = db.getAll()
+        }
+
+        binding.btnFilter.setOnClickListener {
+            newsApiViewModel.loadNewsApi(NewsFilter("Здоровье", "ru"))
+        }
+
+        newsApiViewModel.newsApi.observe(this) { news ->
+            newsList  = MainActivity().convertNewsResponseToNews(news, newsDao)
+            adapterNews.submitList(newsList)
         }
     }
 

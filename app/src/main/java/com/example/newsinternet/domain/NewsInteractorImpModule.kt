@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val newsInteractorImpModule = module {
     single<NewsInteractor> {
-        NewsInteractorImp(get())
+        NewsInteractorImp(newsApi = get())
     }
 }

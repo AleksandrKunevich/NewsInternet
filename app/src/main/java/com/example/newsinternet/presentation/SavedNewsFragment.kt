@@ -36,7 +36,7 @@ class SavedNewsFragment(private val newsDao: List<News>?) : Fragment() {
         textView.text = if (newsDao.isNullOrEmpty()) {
             "No saved news"
         } else {
-            newsDao.first().urlResource
+            newsDao.first().urlResource + " ||||| " + newsDao.size
         }
     }
 }
