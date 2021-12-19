@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.Math.random
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
@@ -53,6 +54,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         newsResponse.articles.forEach {
             news.add(
                 News(
+                    id = it.source?.id?.toInt() ?: (0..Int.MAX_VALUE).random(),
                     imageUrl = it.urlImage ?: News().imageUrl,
                     urlResource = it.url ?: News().urlResource,
                     title = it.title ?: News().title,

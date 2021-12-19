@@ -37,7 +37,7 @@ class NewsHolder private constructor(
         isChecked.isChecked = item.isSaved
 
         isChecked.setOnClickListener {
-            clickListener.onImageCheckItemNewsClickListener(adapterPosition)
+            clickListener.onImageSaveItemNewsClickListener(adapterPosition)
         }
 
         title.setOnClickListener {

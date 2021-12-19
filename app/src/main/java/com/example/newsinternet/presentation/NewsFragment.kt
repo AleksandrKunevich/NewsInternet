@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import com.bumptech.glide.Glide
+import com.example.newsinternet.data.storage.AppDataBase
+import com.example.newsinternet.data.storage.NewsDao
 import com.example.newsinternet.databinding.ActivityMainBinding
 import com.example.newsinternet.databinding.NewsListApiBinding
 import com.example.newsinternet.domain.OnNewsApiClickListener
@@ -24,10 +27,19 @@ class NewsFragment(private val newsList: List<News>) : Fragment() {
     private lateinit var binding: NewsListApiBinding
     private lateinit var bindingActivity: ActivityMainBinding
     private val adapterNews by lazy { NewsAdapter(newsApiClickListener) }
+    private var newsDao: List<News> = mutableListOf()
+    private lateinit var db: NewsDao
 
     private val newsApiClickListener: OnNewsApiClickListener = object : OnNewsApiClickListener {
-        override fun onImageCheckItemNewsClickListener(adapterPosition: Int) {
-            newsList[adapterPosition].isSaved = !newsList[adapterPosition].isSaved
+        override fun onImageSaveItemNewsClickListener(adapterPosition: Int) {
+            newsList[adapterPosition].apply {
+                isSaved = !isSaved
+                if (isSaved) {
+                    db.inset(this)
+                } else {
+                    db.delete(this)
+                }
+            }
         }
 
         override fun onTitleNewsContainerClickListener(news: News) {
@@ -68,10 +80,24 @@ class NewsFragment(private val newsList: List<News>) : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        initRecycler()
+        initDao()
+    }
+
+    private fun initRecycler() {
         binding.apply {
             recyclerNewsApi.adapter = adapterNews
             recyclerNewsApi.layoutManager = LinearLayoutManager(activity)
             adapterNews.submitList(newsList)
         }
+    }
+
+    private fun initDao() {
+        db = Room
+            .databaseBuilder(requireContext(), AppDataBase::class.java, "DAO saved News")
+            .allowMainThreadQueries()
+            .build()
+            .newsDao()
+        newsDao = db.getAll()
     }
 }
