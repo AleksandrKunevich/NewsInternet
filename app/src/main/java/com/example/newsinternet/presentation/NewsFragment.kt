@@ -1,11 +1,9 @@
 package com.example.newsinternet.presentation
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +13,6 @@ import com.example.newsinternet.R
 import com.example.newsinternet.data.network.dto.NewsResponse
 import com.example.newsinternet.data.storage.AppDataBase
 import com.example.newsinternet.data.storage.NewsDao
-import com.example.newsinternet.databinding.ActivityMainBinding
 import com.example.newsinternet.databinding.NewsListApiBinding
 import com.example.newsinternet.domain.NewsFilter
 import com.example.newsinternet.domain.OnNewsApiClickListener
@@ -39,9 +36,12 @@ class NewsFragment : Fragment() {
                 if (isSaved) {
                     db.inset(this)
                 } else {
-                    db.delete(this)
+                    newsDao.forEach {
+                        if (it.title == this.title) {
+                            db.delete(it)
+                        }
+                    }
                 }
-                newsDao = db.getAll()
             }
         }
 
@@ -58,7 +58,6 @@ class NewsFragment : Fragment() {
                 binding.imageNews.visibility = View.INVISIBLE
             }
         }
-
     }
 
     override fun onCreateView(
@@ -78,15 +77,13 @@ class NewsFragment : Fragment() {
         initDao()
 
         binding.btnSavedNews.setOnClickListener {
-            newsDao = db.getAll()
-            openSavedNewsFragment(newsDao)
+            findNavController().navigate(R.id.action_newsFragment_to_savedNewsFragment)
         }
 
         binding.btnReset.setOnClickListener {
             newsDao.forEach { news ->
                 db.delete(news)
             }
-            newsDao = db.getAll()
         }
 
         binding.btnFilter.setOnClickListener {
@@ -94,17 +91,13 @@ class NewsFragment : Fragment() {
         }
 
         newsApiViewModel.newsApi.observe(this) { news ->
-            newsList  = convertNewsResponseToNews(news, newsDao)
+            newsList = convertNewsResponseToNews(news, newsDao)
             adapterNews.submitList(newsList)
         }
     }
 
     private fun openOneNewsFragment(news: News) {
 
-    }
-
-    private fun openSavedNewsFragment(newsDao: List<News>) {
-        findNavController().navigate(R.id.action_newsFragment_to_savedNewsFragment)
     }
 
     private fun initRecycler() {
@@ -124,7 +117,10 @@ class NewsFragment : Fragment() {
         newsDao = db.getAll()
     }
 
-    private fun convertNewsResponseToNews(newsResponse: NewsResponse, newsDao: List<News>?): List<News> {
+    private fun convertNewsResponseToNews(
+        newsResponse: NewsResponse,
+        newsDao: List<News>?
+    ): List<News> {
         val news: MutableList<News> = mutableListOf()
         newsResponse.articles.forEach {
             val randomId = (0..Int.MAX_VALUE).random()
