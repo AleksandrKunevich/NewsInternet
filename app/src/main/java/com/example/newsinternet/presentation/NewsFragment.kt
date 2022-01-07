@@ -1,5 +1,7 @@
 package com.example.newsinternet.presentation
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -84,6 +86,10 @@ class NewsFragment : Fragment() {
             newsDao.forEach { news ->
                 db.delete(news)
             }
+            newsList.forEach {
+                it.isSaved = false
+            }
+            adapterNews.submitList(newsList)
         }
 
         binding.btnFilter.setOnClickListener {
@@ -97,7 +103,9 @@ class NewsFragment : Fragment() {
     }
 
     private fun openOneNewsFragment(news: News) {
-
+        val address = Uri.parse(news.urlResource)
+        val openIntent = Intent(Intent.ACTION_VIEW, address)
+        startActivity(openIntent);
     }
 
     private fun initRecycler() {

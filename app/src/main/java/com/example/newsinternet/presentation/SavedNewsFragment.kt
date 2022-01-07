@@ -1,5 +1,7 @@
 package com.example.newsinternet.presentation
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,9 +27,24 @@ class SavedNewsFragment : Fragment() {
 
     private val newsApiClickListener: OnNewsApiClickListener = object : OnNewsApiClickListener {
         override fun onImageSaveItemNewsClickListener(adapterPosition: Int) {
+            savedNews[adapterPosition].apply {
+                isSaved = !isSaved
+                if (isSaved) {
+                    db.inset(this)
+                } else {
+                    savedNews.forEach {
+                        if (it.title == this.title) {
+                            db.delete(it)
+                        }
+                    }
+                }
+            }
         }
 
         override fun onTitleNewsContainerClickListener(news: News) {
+            val address = Uri.parse(news.urlResource)
+            val openIntent = Intent(Intent.ACTION_VIEW, address)
+            startActivity(openIntent);
         }
 
         override fun onImageNewsContainerClickListener(imageUrl: String) {
