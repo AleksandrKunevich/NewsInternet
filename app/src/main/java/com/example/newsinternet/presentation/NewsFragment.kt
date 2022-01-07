@@ -1,13 +1,18 @@
 package com.example.newsinternet.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.bumptech.glide.Glide
+import com.example.newsinternet.R
+import com.example.newsinternet.data.network.dto.NewsResponse
 import com.example.newsinternet.data.storage.AppDataBase
 import com.example.newsinternet.data.storage.NewsDao
 import com.example.newsinternet.databinding.ActivityMainBinding
@@ -18,16 +23,10 @@ import com.example.newsinternet.presentation.recycler.News
 import com.example.newsinternet.presentation.recycler.NewsAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewsFragment(private var newsList: List<News>) : Fragment() {
+class NewsFragment : Fragment() {
 
-    companion object {
-        const val TAG = "NewsFragment(news)"
-
-        fun newInstance(news: List<News>) = NewsFragment(news)
-    }
-
+    private var newsList: List<News> = emptyList()
     private lateinit var binding: NewsListApiBinding
-    private lateinit var bindingActivity: ActivityMainBinding
     private val adapterNews by lazy { NewsAdapter(newsApiClickListener) }
     private var newsDao: List<News> = mutableListOf()
     private lateinit var db: NewsDao
@@ -50,8 +49,6 @@ class NewsFragment(private var newsList: List<News>) : Fragment() {
             openOneNewsFragment(news)
         }
 
-
-
         override fun onImageNewsContainerClickListener(imageUrl: String) {
             binding.recyclerNewsApi.visibility = View.INVISIBLE
             binding.imageNews.visibility = View.VISIBLE
@@ -70,13 +67,13 @@ class NewsFragment(private var newsList: List<News>) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = NewsListApiBinding.inflate(inflater, container, false)
-        bindingActivity = ActivityMainBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
 
+        newsApiViewModel.loadNewsApi(null)
         initRecycler()
         initDao()
 
@@ -97,35 +94,17 @@ class NewsFragment(private var newsList: List<News>) : Fragment() {
         }
 
         newsApiViewModel.newsApi.observe(this) { news ->
-            newsList  = MainActivity().convertNewsResponseToNews(news, newsDao)
+            newsList  = convertNewsResponseToNews(news, newsDao)
             adapterNews.submitList(newsList)
         }
     }
 
     private fun openOneNewsFragment(news: News) {
-        parentFragmentManager
-            .beginTransaction()
-            .addToBackStack(OneNewsFragment.TAG)
-            .add(
-                bindingActivity.container.id,
-                OneNewsFragment.newInstance(news),
-                OneNewsFragment.TAG
-            )
-            .remove(this@NewsFragment)
-            .commit()
+
     }
 
     private fun openSavedNewsFragment(newsDao: List<News>) {
-        parentFragmentManager
-            .beginTransaction()
-            .addToBackStack(SavedNewsFragment.TAG)
-            .add(
-                bindingActivity.container.id,
-                SavedNewsFragment.newInstance(newsDao),
-                SavedNewsFragment.TAG
-            )
-            .remove(this@NewsFragment)
-            .commit()
+        findNavController().navigate(R.id.action_newsFragment_to_savedNewsFragment)
     }
 
     private fun initRecycler() {
@@ -143,5 +122,33 @@ class NewsFragment(private var newsList: List<News>) : Fragment() {
             .build()
             .newsDao()
         newsDao = db.getAll()
+    }
+
+    private fun convertNewsResponseToNews(newsResponse: NewsResponse, newsDao: List<News>?): List<News> {
+        val news: MutableList<News> = mutableListOf()
+        newsResponse.articles.forEach {
+            val randomId = (0..Int.MAX_VALUE).random()
+            var checked = false
+            newsDao?.let { listNews ->
+                listNews.forEach { news ->
+                    if (news.title == it.title) {
+                        checked = news.isSaved
+                    }
+                }
+            }
+            news.add(
+                News(
+                    uid = randomId,
+                    imageUrl = it.urlImage ?: News(randomId).imageUrl,
+                    urlResource = it.url ?: News(randomId).urlResource,
+                    title = it.title ?: News(randomId).title,
+                    date = it.date ?: News(randomId).date,
+                    content = it.content ?: News(randomId).content,
+                    author = it.author ?: News(randomId).author,
+                    isSaved = checked
+                )
+            )
+        }
+        return news.toList()
     }
 }

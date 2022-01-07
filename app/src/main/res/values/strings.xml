@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NewsInternet</string>
+    <string name="back_to_news">Back to News</string>
 </resources>
