@@ -9,12 +9,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.example.newsinternet.R
 import com.example.newsinternet.data.network.dto.NewsResponse
-import com.example.newsinternet.data.storage.AppDataBase
-import com.example.newsinternet.data.storage.NewsDao
 import com.example.newsinternet.databinding.NewsListApiBinding
 import com.example.newsinternet.domain.NewsFilter
 import com.example.newsinternet.domain.OnNewsApiClickListener
@@ -28,7 +25,6 @@ class NewsFragment : Fragment() {
     private lateinit var binding: NewsListApiBinding
     private val adapterNews by lazy { NewsAdapter(newsApiClickListener) }
     private var newsDao: List<News> = mutableListOf()
-    private lateinit var db: NewsDao
     private val newsApiViewModel: NewsApiViewModel by viewModel()
 
     private val newsApiClickListener: OnNewsApiClickListener = object : OnNewsApiClickListener {
@@ -36,11 +32,11 @@ class NewsFragment : Fragment() {
             newsList[adapterPosition].apply {
                 isSaved = !isSaved
                 if (isSaved) {
-                    db.inset(this)
+                    newsApiViewModel.insetNews(this)
                 } else {
                     newsDao.forEach {
                         if (it.title == this.title) {
-                            db.delete(it)
+                            newsApiViewModel.deleteNews(it)
                         }
                     }
                 }
@@ -76,7 +72,6 @@ class NewsFragment : Fragment() {
 
         newsApiViewModel.loadNewsApi(null)
         initRecycler()
-        initDao()
 
         binding.btnSavedNews.setOnClickListener {
             findNavController().navigate(R.id.action_newsFragment_to_savedNewsFragment)
@@ -84,7 +79,7 @@ class NewsFragment : Fragment() {
 
         binding.btnReset.setOnClickListener {
             newsDao.forEach { news ->
-                db.delete(news)
+                newsApiViewModel.deleteNews(news)
             }
             newsList.forEach {
                 it.isSaved = false
@@ -114,15 +109,6 @@ class NewsFragment : Fragment() {
             recyclerNewsApi.layoutManager = LinearLayoutManager(activity)
             adapterNews.submitList(newsList)
         }
-    }
-
-    private fun initDao() {
-        db = Room
-            .databaseBuilder(requireContext(), AppDataBase::class.java, "DAO saved News")
-            .allowMainThreadQueries()
-            .build()
-            .newsDao()
-        newsDao = db.getAll()
     }
 
     private fun convertNewsResponseToNews(

@@ -8,7 +8,7 @@ import com.example.newsinternet.presentation.recycler.News
 
 @Dao
 interface NewsDao {
-    @Query("SELECT * FROM news")
+    @Query("SELECT * FROM RoomDataBase")
     fun getAll(): List<News>
 
     @Insert

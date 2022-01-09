@@ -13,6 +13,6 @@ abstract class AppDataBase : RoomDatabase() {
         const val VERSION = 1
     }
 
-    abstract fun newsDao(): NewsDao
+    abstract fun getNewsDao(): NewsDao
 }
 
