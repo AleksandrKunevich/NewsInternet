@@ -11,12 +11,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.newsinternet.R
-import com.example.newsinternet.data.network.dto.NewsResponse
+import com.example.newsinternet.data.network.dto.NewsApiViewModel
 import com.example.newsinternet.databinding.NewsListApiBinding
 import com.example.newsinternet.domain.NewsFilter
 import com.example.newsinternet.domain.OnNewsApiClickListener
-import com.example.newsinternet.presentation.recycler.News
-import com.example.newsinternet.presentation.recycler.NewsAdapter
+import com.example.newsinternet.presentation.recycler.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NewsFragment : Fragment() {
@@ -24,21 +23,17 @@ class NewsFragment : Fragment() {
     private var newsList: List<News> = emptyList()
     private lateinit var binding: NewsListApiBinding
     private val adapterNews by lazy { NewsAdapter(newsApiClickListener) }
-    private var newsDao: List<News> = mutableListOf()
     private val newsApiViewModel: NewsApiViewModel by viewModel()
+    private val newsViewModel: NewsViewModel by viewModel()
 
     private val newsApiClickListener: OnNewsApiClickListener = object : OnNewsApiClickListener {
         override fun onImageSaveItemNewsClickListener(adapterPosition: Int) {
             newsList[adapterPosition].apply {
                 isSaved = !isSaved
                 if (isSaved) {
-                    newsApiViewModel.insetNews(this)
+                    newsViewModel.insertNewsDataBase(this)
                 } else {
-                    newsDao.forEach {
-                        if (it.title == this.title) {
-                            newsApiViewModel.deleteNews(it)
-                        }
-                    }
+                    newsViewModel.deleteNewsDataBase(this)
                 }
             }
         }
@@ -78,21 +73,16 @@ class NewsFragment : Fragment() {
         }
 
         binding.btnReset.setOnClickListener {
-            newsDao.forEach { news ->
-                newsApiViewModel.deleteNews(news)
-            }
-            newsList.forEach {
-                it.isSaved = false
-            }
-            adapterNews.submitList(newsList)
         }
 
         binding.btnFilter.setOnClickListener {
             newsApiViewModel.loadNewsApi(NewsFilter("Здоровье", "ru"))
         }
 
-        newsApiViewModel.newsApi.observe(this) { news ->
-            newsList = convertNewsResponseToNews(news, newsDao)
+        newsApiViewModel.newsApi.observe(this) { newsResponse ->
+            newsList = newsResponse.articles.map {
+                it.toNews()
+            }
             adapterNews.submitList(newsList)
         }
     }
@@ -107,38 +97,6 @@ class NewsFragment : Fragment() {
         binding.apply {
             recyclerNewsApi.adapter = adapterNews
             recyclerNewsApi.layoutManager = LinearLayoutManager(activity)
-            adapterNews.submitList(newsList)
         }
-    }
-
-    private fun convertNewsResponseToNews(
-        newsResponse: NewsResponse,
-        newsDao: List<News>?
-    ): List<News> {
-        val news: MutableList<News> = mutableListOf()
-        newsResponse.articles.forEach {
-            val randomId = (0..Int.MAX_VALUE).random()
-            var checked = false
-            newsDao?.let { listNews ->
-                listNews.forEach { news ->
-                    if (news.title == it.title) {
-                        checked = news.isSaved
-                    }
-                }
-            }
-            news.add(
-                News(
-                    uid = randomId,
-                    imageUrl = it.urlImage ?: News(randomId).imageUrl,
-                    urlResource = it.url ?: News(randomId).urlResource,
-                    title = it.title ?: News(randomId).title,
-                    date = it.date ?: News(randomId).date,
-                    content = it.content ?: News(randomId).content,
-                    author = it.author ?: News(randomId).author,
-                    isSaved = checked
-                )
-            )
-        }
-        return news.toList()
     }
 }

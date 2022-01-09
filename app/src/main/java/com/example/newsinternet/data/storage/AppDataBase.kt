@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.example.newsinternet.presentation.recycler.News
 
 @Database(
-    entities = [News::class], version = AppDataBase.VERSION
+    entities = [NewsEntity::class], version = AppDataBase.VERSION
 )
 
 abstract class AppDataBase : RoomDatabase() {

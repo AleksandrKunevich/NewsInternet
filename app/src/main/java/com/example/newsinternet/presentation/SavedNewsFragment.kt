@@ -14,29 +14,17 @@ import com.example.newsinternet.databinding.SavedNewsBinding
 import com.example.newsinternet.domain.OnNewsApiClickListener
 import com.example.newsinternet.presentation.recycler.News
 import com.example.newsinternet.presentation.recycler.NewsAdapter
+import com.example.newsinternet.presentation.recycler.NewsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SavedNewsFragment : Fragment() {
 
     private lateinit var binding: SavedNewsBinding
-    private var savedNews: List<News> = mutableListOf()
     private val adapterNews by lazy { NewsAdapter(newsApiClickListener) }
-    private val newsApiViewModel: NewsApiViewModel by viewModel()
+    private val newsViewModel: NewsViewModel by viewModel()
 
     private val newsApiClickListener: OnNewsApiClickListener = object : OnNewsApiClickListener {
         override fun onImageSaveItemNewsClickListener(adapterPosition: Int) {
-            savedNews[adapterPosition].apply {
-                isSaved = !isSaved
-                if (isSaved) {
-                    newsApiViewModel.insetNews(this)
-                } else {
-                    savedNews.forEach {
-                        if (it.title == this.title) {
-                            newsApiViewModel.deleteNews(it)
-                        }
-                    }
-                }
-            }
         }
 
         override fun onTitleNewsContainerClickListener(news: News) {
@@ -60,14 +48,21 @@ class SavedNewsFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        newsViewModel.loadNewsDataBase()
         initRecycler()
+        initObserve()
+    }
+
+    private fun initObserve() {
+        newsViewModel.newsDataBase.observe(this) {
+            adapterNews.submitList(it)
+        }
     }
 
     private fun initRecycler() {
         binding.apply {
             recyclerNewsSaved.adapter = adapterNews
             recyclerNewsSaved.layoutManager = LinearLayoutManager(activity)
-            adapterNews.submitList(savedNews)
         }
 
         binding.buttonBack.setOnClickListener {

@@ -1,11 +1,18 @@
-package com.example.newsinternet.data.network
+package com.example.newsinternet.domain.di
 
-import com.example.newsinternet.domain.NewsInteractor
-import com.example.newsinternet.domain.NewsInteractorImp
+import com.example.newsinternet.domain.NewsApiInteractor
+import com.example.newsinternet.domain.NewsApiInteractorImp
+import com.example.newsinternet.presentation.recycler.NewsDataBaseImpl
+import com.example.newsinternet.presentation.recycler.NewsDataBaseInteractor
 import org.koin.dsl.module
 
 val newsInteractorImpModule = module {
-    single<NewsInteractor> {
-        NewsInteractorImp(newsApi = get())
+
+    single<NewsApiInteractor> {
+        NewsApiInteractorImp(newsApi = get())
+    }
+
+    single<NewsDataBaseInteractor> {
+        NewsDataBaseImpl(newsDao = get())
     }
 }

@@ -27,11 +27,4 @@ class OneNewsFragment(private val news: News) : Fragment() {
         binding = OneNewsBinding.inflate(inflater, container, false)
         return binding.root
     }
-
-    override fun onStart() {
-        super.onStart()
-
-        binding.texViewOneNews.movementMethod = ScrollingMovementMethod()
-        binding.texViewOneNews.text = news.content
-    }
 }

@@ -1,5 +1,6 @@
-package com.example.newsinternet.presentation
+package com.example.newsinternet.domain.di
 
+import com.example.newsinternet.data.network.dto.NewsApiViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

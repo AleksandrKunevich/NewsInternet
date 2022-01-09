@@ -1,36 +1,21 @@
-package com.example.newsinternet.presentation
+package com.example.newsinternet.data.network.dto
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newsinternet.data.network.dto.NewsResponse
 import com.example.newsinternet.domain.NewsFilter
-import com.example.newsinternet.domain.NewsInteractor
-import com.example.newsinternet.domain.NewsInteractorImp
-import com.example.newsinternet.presentation.recycler.News
+import com.example.newsinternet.domain.NewsApiInteractor
 import kotlinx.coroutines.launch
 
-class NewsApiViewModel(private val interactor: NewsInteractor) : ViewModel() {
+class NewsApiViewModel(private val interactor: NewsApiInteractor) : ViewModel() {
 
     val newsApi: LiveData<NewsResponse> get() = _newsApi
     private val _newsApi = MutableLiveData<NewsResponse>()
 
     fun loadNewsApi(filter: NewsFilter?) {
         viewModelScope.launch {
-            _newsApi.value = interactor.getNews(filter)
-        }
-    }
-
-    fun insetNews(news: News) {
-        viewModelScope.launch {
-            interactor.insetNews(news)
-        }
-    }
-
-    fun deleteNews(news: News) {
-        viewModelScope.launch {
-            interactor.deleteNews(news)
+            _newsApi.value = interactor.getNewsApi(filter)
         }
     }
 

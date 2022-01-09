@@ -1,13 +1,14 @@
 package com.example.newsinternet
 
 import android.app.Application
-import com.example.newsinternet.data.network.newsInteractorImpModule
 import com.example.newsinternet.data.network.retrofitModule
 import com.example.newsinternet.data.storage.di.roomModule
-import com.example.newsinternet.presentation.newsApiViewModelModule
+import com.example.newsinternet.domain.di.newsApiViewModelModule
+import com.example.newsinternet.domain.di.newsInteractorImpModule
+import com.example.newsinternet.presentation.recycler.di.newsViewModelModule
 import org.koin.core.context.startKoin
 
-class MainApplication: Application() {
+class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -17,7 +18,8 @@ class MainApplication: Application() {
                 roomModule,
                 retrofitModule,
                 newsInteractorImpModule,
-                newsApiViewModelModule
+                newsApiViewModelModule,
+                newsViewModelModule
             )
         }
     }
