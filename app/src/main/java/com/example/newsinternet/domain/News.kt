@@ -1,4 +1,4 @@
-package com.example.newsinternet.presentation.recycler
+package com.example.newsinternet.domain
 
 data class News(
     val imageUrl: String,

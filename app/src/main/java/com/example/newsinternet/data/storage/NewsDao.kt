@@ -11,7 +11,7 @@ interface NewsDao {
     fun getAll(): List<NewsEntity>
 
     @Insert
-    fun inset(news: NewsEntity)
+    fun insert(news: NewsEntity)
 
     @Delete
     fun delete(news: NewsEntity)

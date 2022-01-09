@@ -2,7 +2,6 @@ package com.example.newsinternet.data.storage
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.newsinternet.presentation.recycler.News
 
 @Database(
     entities = [NewsEntity::class], version = AppDataBase.VERSION

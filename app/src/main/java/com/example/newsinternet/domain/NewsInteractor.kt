@@ -1,6 +1,8 @@
-package com.example.newsinternet.presentation.recycler
+package com.example.newsinternet.domain
 
-interface NewsDataBaseInteractor {
+import com.example.newsinternet.domain.News
+
+interface NewsInteractor {
 
     suspend fun getNewsDataBase(): List<News>
 

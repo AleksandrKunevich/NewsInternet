@@ -2,7 +2,7 @@ package com.example.newsinternet.presentation.recycler
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newsinternet.data.network.dto.NewsResponse
+import com.example.newsinternet.domain.News
 import com.example.newsinternet.domain.OnNewsApiClickListener
 
 class NewsAdapter(private val clickListener: OnNewsApiClickListener) :

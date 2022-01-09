@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.newsinternet.R
 import com.example.newsinternet.data.network.dto.NewsApiViewModel
+import com.example.newsinternet.data.storage.toNews
 import com.example.newsinternet.databinding.NewsListApiBinding
+import com.example.newsinternet.domain.News
 import com.example.newsinternet.domain.NewsFilter
 import com.example.newsinternet.domain.OnNewsApiClickListener
 import com.example.newsinternet.presentation.recycler.*
@@ -24,7 +26,7 @@ class NewsFragment : Fragment() {
     private lateinit var binding: NewsListApiBinding
     private val adapterNews by lazy { NewsAdapter(newsApiClickListener) }
     private val newsApiViewModel: NewsApiViewModel by viewModel()
-    private val newsViewModel: NewsViewModel by viewModel()
+    private val newsViewModel by viewModel<NewsViewModel>()
 
     private val newsApiClickListener: OnNewsApiClickListener = object : OnNewsApiClickListener {
         override fun onImageSaveItemNewsClickListener(adapterPosition: Int) {

@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newsinternet.R
+import com.example.newsinternet.domain.News
 import com.example.newsinternet.domain.OnNewsApiClickListener
 
 class NewsHolder private constructor(

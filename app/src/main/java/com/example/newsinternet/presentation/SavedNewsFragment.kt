@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsinternet.R
 import com.example.newsinternet.databinding.SavedNewsBinding
 import com.example.newsinternet.domain.OnNewsApiClickListener
-import com.example.newsinternet.presentation.recycler.News
+import com.example.newsinternet.domain.News
 import com.example.newsinternet.presentation.recycler.NewsAdapter
 import com.example.newsinternet.presentation.recycler.NewsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel

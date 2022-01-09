@@ -2,7 +2,6 @@ package com.example.newsinternet.domain
 
 import com.example.newsinternet.data.network.NewsApi
 import com.example.newsinternet.data.network.dto.NewsResponse
-import com.example.newsinternet.presentation.recycler.News
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

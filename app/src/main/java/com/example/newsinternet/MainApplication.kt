@@ -5,6 +5,7 @@ import com.example.newsinternet.data.network.retrofitModule
 import com.example.newsinternet.data.storage.di.roomModule
 import com.example.newsinternet.domain.di.newsApiViewModelModule
 import com.example.newsinternet.domain.di.newsInteractorImpModule
+import com.example.newsinternet.presentation.recycler.di.newsDataBaseModule
 import com.example.newsinternet.presentation.recycler.di.newsViewModelModule
 import org.koin.core.context.startKoin
 
@@ -19,7 +20,8 @@ class MainApplication : Application() {
                 retrofitModule,
                 newsInteractorImpModule,
                 newsApiViewModelModule,
-                newsViewModelModule
+                newsViewModelModule,
+                newsDataBaseModule
             )
         }
     }
