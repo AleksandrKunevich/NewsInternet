@@ -30,14 +30,14 @@ class NewsHolder private constructor(
 
     private val image: ImageView by lazy { itemView.findViewById(R.id.imageItemNews) }
     private val title: TextView by lazy { itemView.findViewById(R.id.textViewItemNews) }
-    private val isChecked: CheckBox by lazy { itemView.findViewById(R.id.isSaveNewsCheckBox) }
+    private val isCheckedIcon: CheckBox by lazy { itemView.findViewById(R.id.isSaveNewsCheckBox) }
 
     fun bindView(item: News) {
-        item.imageUrl?.let { loadImageUrl(it) }
+        loadImageUrl(item.imageUrl)
         title.text = item.title
-        isChecked.isChecked = item.isSaved
+        isCheckedIcon.isChecked = item.isSaved
 
-        isChecked.setOnClickListener {
+        isCheckedIcon.setOnClickListener {
             clickListener.onImageSaveItemNewsClickListener(adapterPosition)
         }
 

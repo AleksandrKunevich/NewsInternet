@@ -1,8 +1,6 @@
 package com.example.newsinternet.domain
 
-import com.example.newsinternet.domain.News
-
-interface NewsInteractor {
+interface NewsDataBaseInteractor {
 
     suspend fun getNewsDataBase(): List<News>
 

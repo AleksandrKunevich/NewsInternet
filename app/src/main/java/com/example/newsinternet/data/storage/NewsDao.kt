@@ -7,7 +7,7 @@ import androidx.room.Query
 
 @Dao
 interface NewsDao {
-    @Query("SELECT * FROM RoomDataBase")
+    @Query("SELECT * FROM room")
     fun getAll(): List<NewsEntity>
 
     @Insert

@@ -5,11 +5,11 @@ import com.example.newsinternet.data.storage.AppDataBase
 import org.koin.dsl.module
 
 val roomModule = module {
-    single {
+    single<AppDataBase> {
         Room.databaseBuilder(
             get(),
             AppDataBase::class.java,
-            "RoomDataBase"
+            "room"
         ).build()
     }
 

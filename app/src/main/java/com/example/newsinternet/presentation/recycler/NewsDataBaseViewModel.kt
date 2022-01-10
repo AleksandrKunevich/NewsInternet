@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsinternet.domain.News
-import com.example.newsinternet.domain.NewsInteractor
+import com.example.newsinternet.domain.NewsDataBaseInteractor
 import kotlinx.coroutines.launch
 
-class NewsViewModel(private val interactor: NewsInteractor) : ViewModel() {
+class NewsDataBaseViewModel(private val interactor: NewsDataBaseInteractor) : ViewModel() {
 
     private val _newsDataBase = MutableLiveData<List<News>>()
     val newsDataBase: LiveData<List<News>> get() = _newsDataBase

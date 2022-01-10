@@ -25,8 +25,8 @@ class NewsFragment : Fragment() {
     private var newsList: List<News> = emptyList()
     private lateinit var binding: NewsListApiBinding
     private val adapterNews by lazy { NewsAdapter(newsApiClickListener) }
-    private val newsApiViewModel: NewsApiViewModel by viewModel()
-    private val newsViewModel by viewModel<NewsViewModel>()
+    private val newsApiViewModel by viewModel<NewsApiViewModel>()
+    private val newsViewModel by viewModel<NewsDataBaseViewModel>()
 
     private val newsApiClickListener: OnNewsApiClickListener = object : OnNewsApiClickListener {
         override fun onImageSaveItemNewsClickListener(adapterPosition: Int) {
@@ -68,6 +68,7 @@ class NewsFragment : Fragment() {
         super.onStart()
 
         newsApiViewModel.loadNewsApi(null)
+        newsViewModel.loadNewsDataBase()
         initRecycler()
 
         binding.btnSavedNews.setOnClickListener {

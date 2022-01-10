@@ -14,14 +14,14 @@ import com.example.newsinternet.databinding.SavedNewsBinding
 import com.example.newsinternet.domain.OnNewsApiClickListener
 import com.example.newsinternet.domain.News
 import com.example.newsinternet.presentation.recycler.NewsAdapter
-import com.example.newsinternet.presentation.recycler.NewsViewModel
+import com.example.newsinternet.presentation.recycler.NewsDataBaseViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SavedNewsFragment : Fragment() {
 
     private lateinit var binding: SavedNewsBinding
     private val adapterNews by lazy { NewsAdapter(newsApiClickListener) }
-    private val newsViewModel: NewsViewModel by viewModel()
+    private val newsViewModel by viewModel<NewsDataBaseViewModel>()
 
     private val newsApiClickListener: OnNewsApiClickListener = object : OnNewsApiClickListener {
         override fun onImageSaveItemNewsClickListener(adapterPosition: Int) {
@@ -54,8 +54,8 @@ class SavedNewsFragment : Fragment() {
     }
 
     private fun initObserve() {
-        newsViewModel.newsDataBase.observe(this) {
-            adapterNews.submitList(it)
+        newsViewModel.newsDataBase.observe(this) { newsList ->
+            adapterNews.submitList(newsList)
         }
     }
 
