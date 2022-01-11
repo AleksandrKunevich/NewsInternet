@@ -16,10 +16,14 @@ class NewsDataBaseInteractorImpl(private val newsDao: NewsDao) : NewsDataBaseInt
     }
 
     override suspend fun deleteNewsDataBse(news: News) {
-        newsDao.delete(news.toNewsEntity())
+        return withContext(Dispatchers.IO) {
+            newsDao.delete(news.toNewsEntity())
+        }
     }
 
     override suspend fun insertNewsDataBse(news: News) {
-        newsDao.insert(news.toNewsEntity())
+        return withContext(Dispatchers.IO) {
+            newsDao.insert(news.toNewsEntity())
+        }
     }
 }
