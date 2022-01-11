@@ -78,7 +78,7 @@ interface NewsApi {
         @Query("category") category: String = "",
         @Query("language") language: String = "",
         @Query("country") country: String = "",
-        @Query("pageSize") pageSize: Int = 100,
+        @Query("pageSize") pageSize: Int = 10,
         @Query("page") page: Int = 1,
         @Query("apiKey") apiKey: String = RetrofitClient.API_KEY,
     ): NewsResponse

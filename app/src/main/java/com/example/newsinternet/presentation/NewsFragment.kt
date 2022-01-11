@@ -3,6 +3,7 @@ package com.example.newsinternet.presentation
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,8 @@ import com.example.newsinternet.databinding.NewsListApiBinding
 import com.example.newsinternet.domain.News
 import com.example.newsinternet.domain.NewsFilter
 import com.example.newsinternet.domain.OnNewsApiClickListener
-import com.example.newsinternet.presentation.recycler.*
+import com.example.newsinternet.presentation.recycler.NewsAdapter
+import com.example.newsinternet.presentation.recycler.NewsDataBaseViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NewsFragment : Fragment() {
@@ -76,6 +78,13 @@ class NewsFragment : Fragment() {
         }
 
         binding.btnReset.setOnClickListener {
+            newsViewModel.newsDataBase.value?.forEach { news ->
+                newsViewModel.deleteNewsDataBase(news)
+            }
+            newsList.forEach {
+                it.isSaved = false
+            }
+            adapterNews.submitList(newsList)
         }
 
         binding.btnFilter.setOnClickListener {
@@ -84,7 +93,19 @@ class NewsFragment : Fragment() {
 
         newsApiViewModel.newsApi.observe(this) { newsResponse ->
             newsList = newsResponse.articles.map {
-                it.toNews()
+                var isSavedNews = false
+                var savedNews: News? = null
+                newsViewModel.newsDataBase.value?.forEach { news ->
+                    if (news.title == it.title) {
+                        isSavedNews = true
+                        savedNews = news
+                        savedNews!!.isSaved = true
+                    }
+                }
+                if (!isSavedNews) {
+                    savedNews = it.toNews()
+                }
+                savedNews!!
             }
             adapterNews.submitList(newsList)
         }

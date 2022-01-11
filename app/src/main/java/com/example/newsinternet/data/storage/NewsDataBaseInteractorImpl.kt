@@ -17,13 +17,20 @@ class NewsDataBaseInteractorImpl(private val newsDao: NewsDao) : NewsDataBaseInt
 
     override suspend fun deleteNewsDataBse(news: News) {
         return withContext(Dispatchers.IO) {
-            newsDao.delete(news.toNewsEntity())
+            newsDao.getAll().forEach { newsEntity ->
+                if (newsEntity.title == news.title)
+                    newsDao.delete(newsEntity)
+            }
         }
     }
 
     override suspend fun insertNewsDataBse(news: News) {
         return withContext(Dispatchers.IO) {
-            newsDao.insert(news.toNewsEntity())
+            var isHaveNews = false
+            newsDao.getAll().forEach { newsEntity ->
+                if (newsEntity.title == news.title) {isHaveNews = true}
+            }
+            if (!isHaveNews) {newsDao.insert(news.toNewsEntity())}
         }
     }
 }

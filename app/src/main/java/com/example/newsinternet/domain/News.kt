@@ -4,5 +4,5 @@ data class News(
     val imageUrl: String,
     val urlResource: String,
     val title: String,
-    var isSaved: Boolean = false
+    var isSaved: Boolean
 )

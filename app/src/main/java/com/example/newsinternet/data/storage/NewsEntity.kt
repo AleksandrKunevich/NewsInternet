@@ -17,7 +17,7 @@ data class NewsEntity(
     val title: String,
 
     @ColumnInfo(name = "isSaved")
-    var isSaved: Boolean = false
+    var isSaved: Boolean
 ) {
     @PrimaryKey(autoGenerate = true)
     // Здесь была ошибка, был VAL, А надо VAR - изменяемый!!!

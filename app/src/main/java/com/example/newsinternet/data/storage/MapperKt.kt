@@ -7,7 +7,8 @@ import com.example.newsinternet.domain.News
 fun NewsEntity.toNews() = News(
     imageUrl = imageUrl,
     urlResource = urlResource,
-    title = title
+    title = title,
+    isSaved = isSaved
 )
 
 fun News.toNewsEntity() = NewsEntity(
@@ -20,11 +21,13 @@ fun News.toNewsEntity() = NewsEntity(
 fun NewsResponse.toNews(position: Int) = News(
     imageUrl = articles[position].urlImage!!,
     urlResource = articles[position].url!!,
-    title = articles[position].title!!
+    title = articles[position].title!!,
+    isSaved = false
 )
 
 fun Article.toNews() = News(
     imageUrl = urlImage!!,
     urlResource = url!!,
-    title = title!!
+    title = title!!,
+    isSaved = false
 )
